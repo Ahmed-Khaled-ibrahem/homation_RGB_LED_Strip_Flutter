@@ -49,8 +49,6 @@ class AppCubit extends Cubit<AppStates> {
   String language = "en";
 
 
-
-
   void appStart(){
    // read();
   }
@@ -68,7 +66,8 @@ class AppCubit extends Cubit<AppStates> {
     wificontainer = false;
     emit(general());
   }
-void exit_pass_page_button() {
+
+  void exit_pass_page_button() {
     wificontainer = true;
     emit(general());
   }
@@ -149,25 +148,22 @@ void exit_pass_page_button() {
 
     }
 */
-    //save();
+    save();
     emit(general());
   }
-void changeTheme(bool i) {
 
+  void changeTheme(bool i) {
   darkMode = i;
-
-
-
-    //save();
     emit(general());
+  save();
   }
 
   void changelang(context,eng) {
 
       english = eng;
+      language = language =="en"? "ar": "en";
       emit(Changelang());
-
-    //save();
+      save();
     //Phoenix.rebirth(context);
     //RestartWidget.restartApp(context);
     //print(language);
@@ -306,32 +302,30 @@ else{
 
   }
 
-
   Future read() async {
+
     final prefs = await SharedPreferences.getInstance();
+
     language = prefs.getString('Language')??"en";
-
-    //connectionSwitch = prefs.getBool('Connection')!;
-    //darkMode = prefs.getBool('Theme')!;
-
+    darkMode = prefs.getBool('Theme')!;
+    english = prefs.getBool('english')!;
+    connectionSwitch = prefs.getBool('Connection')!;
     //ip = prefs.getString('ip')!;
     //gateway = prefs.getString('gateway')!;
     //subnet = prefs.getString('subnet')!;
-
-      //changelang();
-
   }
 
   Future save() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('Language', language);
 
-    //prefs.setBool('Connection',connectionSwitch);
-    //prefs.setBool('Theme',darkMode);
+    prefs.setString('Language', language);
+    prefs.setBool('english', english);
+    prefs.setBool('Theme', darkMode);
+    prefs.setBool('Connection', connectionSwitch);
+
     //prefs.setString('ip',ip);
     //prefs.setString('gateway',gateway);
     //prefs.setString('subnet',subnet);
-
   }
 
 }

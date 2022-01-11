@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => AppCubit()..appStart(),
+      create: (BuildContext context) => AppCubit()..read(),
       child:Material(),
     );
   }
@@ -59,7 +59,7 @@ class Material extends StatelessWidget {
         AppCubit cubit = AppCubit.get(context);
         return  MaterialApp(
           builder: EasyLoading.init(),
-          locale:Locale(cubit.language),
+          //locale:Locale(cubit.language),
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -71,7 +71,6 @@ class Material extends StatelessWidget {
           title: "RGB",
           theme: ThemeData(
             scaffoldBackgroundColor: cubit.darkMode? cubit.blackColor: Colors.white,
-
                 textTheme: TextTheme(
                   bodyText2: TextStyle(
                       color: cubit.darkMode?  Colors.white:cubit.blackColor),),),// AppLocalizations.of(context)!.appTitle,

@@ -62,7 +62,7 @@ class myDrawer extends StatelessWidget {
                                   child: Container(
                                       color: cubit.english
                                           ? cubit.mainColor
-                                          : cubit.backColor,
+                                          : cubit.darkMode?  cubit.blackColor:cubit.backColor,
                                       child:  Center(child: Text("English",style: TextStyle(
                                           color: cubit.darkMode?  cubit.backColor : cubit.blackColor),))),
                                 ),

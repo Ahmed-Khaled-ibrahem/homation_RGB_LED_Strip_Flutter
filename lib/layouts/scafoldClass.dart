@@ -10,8 +10,6 @@ import 'package:homation_led_strip/layouts/main_screen.dart';
 import 'drawerPage.dart';
 
 
-
-
 class MyScafold extends StatefulWidget {
   const MyScafold({Key? key}) : super(key: key);
 
