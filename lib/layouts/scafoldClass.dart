@@ -68,18 +68,21 @@ class _MyScafoldState extends State<MyScafold> with SingleTickerProviderStateMix
                         ),
                         title: SizedBox(
                           width: 200,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                height: 30,
-                                child: Image.asset('assets/images/hometion_ICON.png',
-                                 // color: cubit.darkMode? Colors.white: Colors.black,
-                                 //color: cubit.darkMode? Colors.white: Colors.black,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  height: 30,
+                                  child: Image.asset('assets/images/hometion_ICON.png',
+                                   // color: cubit.darkMode? Colors.white: Colors.black,
+                                   //color: cubit.darkMode? Colors.white: Colors.black,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 10,),
-                              const Text("RGB LED Strip",style: TextStyle(fontSize: 25),),
-                            ],
+                                const SizedBox(width: 10,),
+                                const Text("RGB LED Strip",style: TextStyle(fontSize: 25),),
+                              ],
+                            ),
                           ),
                         ),
 
