@@ -1,4 +1,3 @@
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/animation.dart';
 import 'package:homation_led_strip/cubit/cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,7 +5,6 @@ import 'package:homation_led_strip/cubit/states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homation_led_strip/layouts/main_screen.dart';
-
 import 'drawerPage.dart';
 
 
@@ -85,7 +83,6 @@ class _MyScafoldState extends State<MyScafold> with SingleTickerProviderStateMix
                             ),
                           ),
                         ),
-
 
                         //title: Text("appTitle",style: TextStyle(color: cubit.darkMode? Colors.black:Colors.white),),
                       ),

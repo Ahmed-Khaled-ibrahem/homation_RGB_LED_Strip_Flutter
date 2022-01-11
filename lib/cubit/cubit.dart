@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../main.dart';
 import 'states.dart';
 import 'package:http/http.dart'as http ;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -22,7 +21,7 @@ class AppCubit extends Cubit<AppStates> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   //Color mainColor = Colors.green;
-  Color mainColor = Color(0xff13965D);
+  Color mainColor = const Color(0xff13965D);
   Color backColor = Colors.white;
   Color blackColor = const Color(0xFF2A2A2A);
 
@@ -43,11 +42,8 @@ class AppCubit extends Cubit<AppStates> {
   late Color unSelectedProp = darkMode? blackColor : backColor;
 
   Color lightColor = Colors.yellow;
-
   final dataBase = FirebaseDatabase.instance.ref();
-
   String language = "en";
-
 
   void appStart(){
    // read();
@@ -88,11 +84,9 @@ class AppCubit extends Cubit<AppStates> {
           "http://192.168.1.40/conf?ssid="+wifiName.value.text.toString()+"&pass="+passafter);
       http.read(url).catchError((err) {
         print(err);
-
         loading = false;
         EasyLoading.dismiss();
-
-        // on eomrror
+        // on error
       }).then((value) {
         //setState(() {
         loading =false;
@@ -125,29 +119,7 @@ class AppCubit extends Cubit<AppStates> {
   void changeSwitch(bool i) {
 
     connectionSwitch = i;
-/*
-    if(!connectionSwitch){
-      String sendrgb = "R="+rgb.red.toString()+",G="+rgb.green.toString()+",B="+rgb.blue.toString()+",M=0,S=1,E_M=2";
-      dataBase.child('RGB').set(sendrgb);
-
-    }
-    else{
-
-      String sendrgb = "R="+rgb.red.toString()+",G="+rgb.green.toString()+",B="+rgb.blue.toString()+",M=0,S=1,E_M=3";
-      dataBase.child('RGB').set(sendrgb);
-
-      var url = Uri.parse(
-          "http://"+ip+"/mode?mode=3");
-      http.read(url).catchError((err) {
-        // on error
-      }).then((value) {
-        print(value);
-      });
-
-
-
-    }
-*/
+    sendESPMode();
     save();
     emit(general());
   }
@@ -171,24 +143,10 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   void changeColor() {
-    if(!connectionSwitch) {
-      var url = Uri.parse(
-          "http://"+ip+"/data?red="+rgb.red.toString()+"&green="+rgb.green.toString()+"&blue="+rgb.blue.toString()+"&mode=0&state=1");
-      http.read(url).timeout(Duration(seconds: 4)).catchError((err) {
-        var url2 = Uri.parse(
-            "http://"+"192.168.1.40"+"/data?red="+rgb.red.toString()+"&green="+rgb.green.toString()+"&blue="+rgb.blue.toString()+"&mode=0&state=1");
-        http.read(url2).timeout(Duration(seconds: 4)).catchError((err) {});
-      }).then((value) {
-        print(value+"any");
-      });
-    }
-    else{
 
-      String sendrgb = "R="+rgb.red.toString()+",G="+rgb.green.toString()+",B="+rgb.blue.toString()+",M=0,S=1,E_M=3";
-      dataBase.child('RGB').set(sendrgb);
-
-
-    }
+    sendColor(rgb.red, rgb.green, rgb.blue, 0, 1);
+    // important
+    //  "http://"+"192.168.1.40"+"/data?red="+rgb.red
     emit(ChangeColor());
   }
 
@@ -243,63 +201,17 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   void on_off_button(context) {
+
     on = !on;
 
+    if(on){
+      sendColor(rgb.red, rgb.green, rgb.blue, selectedMode, 1);
+    }
+    else{
+      sendColor(0, 0, 0, 0, 0);
+    }
 
-/*
-if(language == "ar"){
-  language="en";
-}
-else{
-  language="ar";
-}
-*/
-
-//RestartWidget.restartApp(context);
-/*
-      on = !on;
-      if(!connectionSwitch) {
-        if(on){
-          var url = Uri.parse(
-              "http://"+ip+"/data?red="+rgb.red.toString()+"&green="+rgb.green.toString()+"&blue="+rgb.blue.toString()+"&mode="+selectedMode.toString()+"&state=1");
-          http.read(url).timeout(Duration(seconds: 4)).catchError((err) {
-            var url2 = Uri.parse(
-                "http://"+"192.168.1.40"+"/data?red="+rgb.red.toString()+"&green="+rgb.green.toString()+"&blue="+rgb.blue.toString()+"&mode="+selectedMode.toString()+"&state=1");
-            http.read(url2).timeout(Duration(seconds: 4)).catchError((err) {});
-            // on error
-          }).then((value) {
-            print(value);
-          });
-        }
-        else{
-          var url = Uri.parse(
-              "http://"+ip+"/data?red=0&green=0&blue=0&mode=0&state=0");
-          http.read(url).timeout(Duration(seconds: 4)).catchError((err) {
-            var url2 = Uri.parse(
-                "http://"+"192.168.1.40"+"/data?red=0&green=0&blue=0&mode=0&state=0");
-            http.read(url2).timeout(Duration(seconds: 4)).catchError((err) {});
-            // on error
-          }).then((value) {
-            print(value);
-          });
-        }
-
-      }
-      else{
-        if(on){
-          String sendrgb = "R="+rgb.red.toString()+",G="+rgb.green.toString()+",B="+rgb.blue.toString()+",M="+selectedMode.toString()+",S=1,E_M=3";
-          dataBase.child('RGB').set(sendrgb);
-
-        }
-        else{
-          String sendrgb = "R=0,G=0,B=0,M=0,S=0,E_M=3";
-          dataBase.child('RGB').set(sendrgb);
-        }
-      }
-*/
     emit(HttpRequest());
-
-
   }
 
   Future read() async {
@@ -328,4 +240,66 @@ else{
     //prefs.setString('subnet',subnet);
   }
 
+
+  void sendColor(int red,int green, int blue, int mode, int state) async{
+
+    if(connectionSwitch){
+
+      var url = Uri.parse(
+          "http://"+ip+"/data?red="+ red.toString()+
+              "&green="+green.toString()
+              +"&blue="+blue.toString()+
+              "&mode="+mode.toString()+
+              "&state="+state.toString());
+      http.read(url).timeout(const Duration(seconds: 4)).catchError((err) {
+        var url2 = Uri.parse(
+            "http://"+ip+"/data?red="+ red.toString()+
+                "&green="+green.toString()
+                +"&blue="+blue.toString()+
+                "&mode="+mode.toString()+
+                "&state="+state.toString());
+        http.read(url2).timeout(const Duration(seconds: 4)).catchError((err) {});
+        // on error
+      }).then((value) {
+        //print(value);
+      });
+    }
+    else{
+      String sendrgb = "R="+red.toString()+
+          ",G="+green.toString()+
+          ",B="+blue.toString()+
+          ",M="+mode.toString()+
+          ",S="+state.toString()+",E_M=3";
+      dataBase.child('RGB').set(sendrgb);
+    }
+  }
+
+
+  void sendESPMode() async{
+
+    if(!connectionSwitch){
+      String sendrgb = "R="+rgb.red.toString()+",G="+rgb.green.toString()+",B="+rgb.blue.toString()+",M=0,S=1,E_M=2";
+      dataBase.child('RGB').set(sendrgb);
+    }
+    else{
+
+      String sendrgb = "R="+rgb.red.toString()+",G="+rgb.green.toString()+",B="+rgb.blue.toString()+",M=0,S=1,E_M=3";
+      dataBase.child('RGB').set(sendrgb);
+
+      var url = Uri.parse(
+          "http://"+ip+"/mode?mode=3");
+      http.read(url).catchError((err) {
+        // on error
+      }).then((value) {
+        print(value);
+      });
+
+    }
+
+  }
+
+
 }
+
+
+
