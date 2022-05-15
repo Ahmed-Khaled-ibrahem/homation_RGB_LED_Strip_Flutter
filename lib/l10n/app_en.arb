@@ -1,5 +1,5 @@
 {
-    "appTitle": "RGB Strip",
+    "appTitle": "RGB LED Strip",
     "calm": "Calm",
     "dance": "Dance",
     "fading": "Fading |",
@@ -32,6 +32,9 @@
     "withPassword": "with password home2023",
     "wIFINameLbl": "WIFI Name",
     "wIFIPasswordLbl": "WIFI Password",
-    "send": "Send"
+    "send": "Send",
+
+    "wifi_name_error": "Wifi Name cannot be empty",
+    "wifi_pass_error": "WiFi Password cannot be empty"
 
 }

@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homation_led_strip/cubit/cubit.dart';
 import 'package:homation_led_strip/cubit/states.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../classes/const.dart';
 
 class myDrawer extends StatelessWidget {
   @override
@@ -28,7 +29,7 @@ class myDrawer extends StatelessWidget {
                       children: [
 
                         const SizedBox(height: 40,),
-                        Text("Language",style: TextStyle(fontWeight: FontWeight.bold ,color: cubit.darkMode? Colors.white:cubit.blackColor),),
+                        Text(AppLocalizations.of(context)!.language,style: TextStyle(fontWeight: FontWeight.bold ,color: cubit.darkMode? Colors.white:blackColor),),
                         const SizedBox(height: 10,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -43,11 +44,11 @@ class myDrawer extends StatelessWidget {
                                   child: Container(
                                       color:
                                       !cubit.english
-                                          ? cubit.mainColor
-                                          : cubit.darkMode? cubit.blackColor : cubit.backColor,
-                                      child:  Center(child: Text("Arabic"
+                                          ? secondColor
+                                          : cubit.darkMode? blackColor : backColor,
+                                      child:  Center(child: Text(AppLocalizations.of(context)!.arabic
                                         ,style: TextStyle(
-                                            color: cubit.darkMode?  cubit.backColor : cubit.blackColor),))),
+                                            color: cubit.darkMode? backColor : blackColor),))),
                                 ),
                               ),
                               onTap: (){cubit.changelang(context,false);},
@@ -61,10 +62,10 @@ class myDrawer extends StatelessWidget {
                                       Radius.circular(20)),
                                   child: Container(
                                       color: cubit.english
-                                          ? cubit.mainColor
-                                          : cubit.darkMode?  cubit.blackColor:cubit.backColor,
-                                      child:  Center(child: Text("English",style: TextStyle(
-                                          color: cubit.darkMode?  cubit.backColor : cubit.blackColor),))),
+                                          ? secondColor
+                                          : cubit.darkMode?  blackColor:backColor,
+                                      child:  Center(child: Text(AppLocalizations.of(context)!.english,style: TextStyle(
+                                          color: cubit.darkMode?  backColor : blackColor),))),
                                 ),
                               ),
                               onTap:  (){cubit.changelang(context,true);},
@@ -72,7 +73,7 @@ class myDrawer extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 20,),
-                         Text("Connection",style: TextStyle(fontWeight: FontWeight.bold,color: cubit.darkMode? Colors.white:cubit.blackColor),),
+                         Text(AppLocalizations.of(context)!.connection,style: TextStyle(fontWeight: FontWeight.bold,color: cubit.darkMode? Colors.white:blackColor),),
                         const SizedBox(height: 10,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -86,10 +87,10 @@ class myDrawer extends StatelessWidget {
                                       Radius.circular(20)),
                                   child: Container(
                                       color: !cubit.connectionSwitch
-                                          ? cubit.mainColor
-                                          : cubit.darkMode? cubit.blackColor : cubit.backColor,
-                                      child: Center(child: Text("Local",style: TextStyle(
-                                          color: cubit.darkMode?  cubit.backColor : cubit.blackColor),))),
+                                          ? secondColor
+                                          : cubit.darkMode? blackColor : backColor,
+                                      child: Center(child: Text(AppLocalizations.of(context)!.local,style: TextStyle(
+                                          color: cubit.darkMode?  backColor : blackColor),))),
                                 ),
                               ),
                               onTap:  (){cubit.changeSwitch(false);},
@@ -103,10 +104,10 @@ class myDrawer extends StatelessWidget {
                                       Radius.circular(20)),
                                   child: Container(
                                       color: cubit.connectionSwitch
-                                          ? cubit.mainColor
-                                          : cubit.darkMode? cubit.blackColor : cubit.backColor,
-                                      child: Center(child: Text("Internet",style: TextStyle(
-                                          color: cubit.darkMode?  cubit.backColor : cubit.blackColor),))),
+                                          ? secondColor
+                                          : cubit.darkMode? blackColor : backColor,
+                                      child: Center(child: Text(AppLocalizations.of(context)!.internet,style: TextStyle(
+                                          color: cubit.darkMode?  backColor : blackColor),))),
                                 ),
                               ),
                               onTap:  (){cubit.changeSwitch(true);},
@@ -114,7 +115,7 @@ class myDrawer extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 20,),
-                         Text("Theme",style: TextStyle(fontWeight: FontWeight.bold,color: cubit.darkMode? Colors.white:cubit.blackColor),),
+                         Text(AppLocalizations.of(context)!.theme,style: TextStyle(fontWeight: FontWeight.bold,color: cubit.darkMode? Colors.white:blackColor),),
                         const SizedBox(height: 10,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -130,10 +131,10 @@ class myDrawer extends StatelessWidget {
                                   child: Container(
                                       color:
                                       !cubit.darkMode
-                                          ? cubit.mainColor
-                                          : cubit.darkMode? cubit.blackColor : cubit.backColor,
-                                      child: Center(child: Text("Light",style: TextStyle(
-                                          color: cubit.darkMode?  cubit.backColor : cubit.blackColor),))),
+                                          ? secondColor
+                                          : cubit.darkMode? blackColor : backColor,
+                                      child: Center(child: Text(AppLocalizations.of(context)!.light,style: TextStyle(
+                                          color: cubit.darkMode?  backColor : blackColor),))),
                                 ),
                               ),
                               onTap:  (){cubit.changeTheme(false);},
@@ -148,10 +149,10 @@ class myDrawer extends StatelessWidget {
                                   child: Container(
                                       color:
                                       cubit.darkMode
-                                          ? cubit.mainColor
-                                          : cubit.backColor,
-                                      child:  Center(child: Text("Dark",style: TextStyle(
-                                          color: cubit.darkMode?  cubit.backColor : cubit.blackColor),))),
+                                          ? secondColor
+                                          : backColor,
+                                      child:  Center(child: Text(AppLocalizations.of(context)!.dark,style: TextStyle(
+                                          color: cubit.darkMode? backColor : blackColor),))),
                                 ),
                               ),
                               onTap:  (){cubit.changeTheme(true);},
@@ -163,16 +164,16 @@ class myDrawer extends StatelessWidget {
                             cubit.send_pass_page_button();
 
                         },
-                          child: const Text('Change Access Point Settings',),
-                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(cubit.mainColor)),),
+                          child:  Text(AppLocalizations.of(context)!.changeAccessPointSettings,),
+                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(secondColor)),),
                         InkWell(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children:  [ Text('Go to Homation Site',
-                              style: TextStyle(color: cubit.mainColor,),),
+                            children:  [ Text(AppLocalizations.of(context)!.gotoHOMATIONSite,
+                              style: TextStyle(color: secondColor,),),
                                const SizedBox(width: 10,),
                                const Icon(Icons.web_rounded,color: Colors.green,)]),
-                          onTap:(){launch("https://homationsite.blogspot.com");} ,),
+                          onTap:(){ launch("https://homationsite.blogspot.com") ; } ,),
                       ],
                     ),
                   ),
@@ -203,9 +204,9 @@ class myDrawer extends StatelessWidget {
                                 ElevatedButton(
                                   onPressed: (){cubit.exit_pass_page_button();},
                                   child: const Icon(Icons.close),
-                                  style: ButtonStyle(backgroundColor:  MaterialStateProperty.all(cubit.mainColor)),
+                                  style: ButtonStyle(backgroundColor:  MaterialStateProperty.all(mainColor)),
                                 ),
-                                const Text("Wifi Configurations"),
+                                 Text(AppLocalizations.of(context)!.wifiConfigurations),
                               ],
                             ),
                             const SizedBox(height: 20,),
@@ -213,18 +214,17 @@ class myDrawer extends StatelessWidget {
                               padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: cubit.mainColor,
+                                  color: mainColor,
                                   width: 3,
                                 ),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Column(
-
-                                children: const  [
-                                   Text('NOTE'),
-                                   Text( 'Please connect to access point',style: TextStyle(fontSize: 14 ,)),
-                                   Text('that has name Homation Wifi',style: TextStyle(fontSize: 14 ,)),
-                                   Text('with password home2023',style: TextStyle(fontSize: 14 ,)),
+                                children:[
+                                   Text(AppLocalizations.of(context)!.nOTE),
+                                   Text( AppLocalizations.of(context)!.please,style: TextStyle(fontSize: 14 ,)),
+                                   Text(AppLocalizations.of(context)!.that,style: TextStyle(fontSize: 14 ,)),
+                                   Text(AppLocalizations.of(context)!.withPassword,style: TextStyle(fontSize: 14 ,)),
 
                                 ],
                               ),
@@ -235,12 +235,12 @@ class myDrawer extends StatelessWidget {
                               padding: const EdgeInsets.all(10.0),
                               child: TextFormField(
                                 style: TextStyle(
-                                  color: cubit.darkMode? cubit.backColor:cubit.blackColor,
+                                  color: cubit.darkMode? backColor:blackColor,
                                 ),
                                 controller: cubit.wifiName,
                                 validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'WiFi Name cannot be empty';
+                                    return AppLocalizations.of(context)!.wifi_name_error;
                                   } else {
                                     return null;
                                   }
@@ -249,12 +249,12 @@ class myDrawer extends StatelessWidget {
                                   fillColor: Colors.black12,
                                     filled: true,
 
-                                    label: Text("WIFI Name",style: TextStyle(color:  cubit.darkMode? cubit.backColor:cubit.blackColor,),),
+                                    label: Text(AppLocalizations.of(context)!.wIFINameLbl,style: TextStyle(color:  cubit.darkMode? backColor:blackColor,),),
                                     prefixIcon: Icon(Icons.wifi,
-                                      color: cubit.darkMode? cubit.backColor:cubit.blackColor,),
+                                      color: cubit.darkMode? backColor:blackColor,),
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: cubit.mainColor, width: 2.0),
+                                          color: mainColor, width: 2.0),
                                       borderRadius: BorderRadius.circular(15),
                                     )),
                               ),
@@ -265,11 +265,11 @@ class myDrawer extends StatelessWidget {
                               child: TextFormField(
                                 controller: cubit.wifiPass,
                                 style: TextStyle(
-                                  color: cubit.darkMode? cubit.backColor:cubit.blackColor,
+                                  color: cubit.darkMode? backColor:blackColor,
                                 ),
                                 validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'WiFi Password cannot be empty';
+                                    return AppLocalizations.of(context)!.wifi_pass_error;
                                   } else {
                                     return null;
                                   }
@@ -278,12 +278,12 @@ class myDrawer extends StatelessWidget {
                                 decoration: InputDecoration(
                                     fillColor: Colors.black12,
                                     filled: true,
-                                    label: Text("WiFi Password",style: TextStyle(color:  cubit.darkMode? cubit.backColor:cubit.blackColor,),),
+                                    label: Text(AppLocalizations.of(context)!.wIFIPasswordLbl,style: TextStyle(color:  cubit.darkMode? backColor:blackColor,),),
                                     prefixIcon:  Icon(Icons.lock,
-                                        color: cubit.darkMode? cubit.backColor:cubit.blackColor),
+                                        color: cubit.darkMode? backColor:blackColor),
                                     enabledBorder: OutlineInputBorder(
                                       borderSide:  BorderSide(
-                                          color: cubit.mainColor, width: 2.0),
+                                          color: mainColor, width: 2.0),
                                       borderRadius:
                                       BorderRadius.circular(15),
                                     ),
@@ -294,7 +294,7 @@ class myDrawer extends StatelessWidget {
                                       icon: Icon(!cubit.showPassword
                                           ? Icons.visibility
                                           : Icons.visibility_off,
-                                          color: cubit.darkMode? cubit.backColor:cubit.blackColor),
+                                          color: cubit.darkMode?backColor:blackColor),
                                     )),
                               ),
                             ),
@@ -305,14 +305,14 @@ class myDrawer extends StatelessWidget {
                               child: ElevatedButton(onPressed: (){
                                 cubit.tryconnect();
                               },
-                                  style: ButtonStyle(backgroundColor:  MaterialStateProperty.all(cubit.mainColor)),
+                                  style: ButtonStyle(backgroundColor:  MaterialStateProperty.all(mainColor)),
                                   child:
                                  Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                   Text('Send'),
-                                   SizedBox(width: 10,),
-                                   Icon(Icons.send)
+                                children:  [
+                                   Text(AppLocalizations.of(context)!.send),
+                                   const SizedBox(width: 10,),
+                                   const Icon(Icons.send)
                                 ],
                               )
                               ),

@@ -5,6 +5,7 @@ import 'package:homation_led_strip/cubit/states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homation_led_strip/layouts/main_screen.dart';
+import '../classes/const.dart';
 import 'drawerPage.dart';
 
 
@@ -25,7 +26,7 @@ class _MyScafoldState extends State<MyScafold> with SingleTickerProviderStateMix
     animationController = AnimationController(vsync: this,
     animationBehavior: AnimationBehavior.preserve,
     duration: const Duration(milliseconds: 400));
-    animationController.addListener(() {print(animationController.value);});
+    //animationController.addListener(() { print(animationController.value); });
     //animationController.forward();
   }
 
@@ -42,28 +43,18 @@ class _MyScafoldState extends State<MyScafold> with SingleTickerProviderStateMix
               animation: animationController,
               builder: (context,_){
                 return Transform.translate(
-                  offset: Offset(animationController.value*200,animationController.value*50),
+                  offset: cubit.language=='en'? Offset(animationController.value*200,animationController.value*50):
+                  Offset(animationController.value*-200,animationController.value*50),
                   child: Transform.scale(
                     scale: (animationController.value*-0.3) + 1,
                     child: Scaffold(
                       appBar: AppBar(
                         centerTitle: true,
-                        toolbarHeight: 120,
+                        toolbarHeight: 100,
                         shape: const RoundedRectangleBorder(
                           borderRadius:  BorderRadius.vertical(bottom: Radius.circular(80),),),
-                        backgroundColor: cubit.mainColor,
+                        backgroundColor: mainColor,
                         elevation: 0,
-                        flexibleSpace: GestureDetector(
-                          onTap: (){
-                            if(!animationController.isCompleted){
-                              animationController.forward();
-                            }
-                            else{
-                              animationController.reverse();
-                            }
-
-                            },
-                        ),
                         title: SizedBox(
                           width: 200,
                           child: SingleChildScrollView(
@@ -78,7 +69,7 @@ class _MyScafoldState extends State<MyScafold> with SingleTickerProviderStateMix
                                   ),
                                 ),
                                 const SizedBox(width: 10,),
-                                const Text("RGB LED Strip",style: TextStyle(fontSize: 25),),
+                                Text(AppLocalizations.of(context)!.appTitle,style: const TextStyle(fontSize: 25),),
                               ],
                             ),
                           ),
@@ -87,20 +78,47 @@ class _MyScafoldState extends State<MyScafold> with SingleTickerProviderStateMix
                         //title: Text("appTitle",style: TextStyle(color: cubit.darkMode? Colors.black:Colors.white),),
                       ),
                       body: MainScreen(),
-                      floatingActionButton: FloatingActionButton(
-                        child: Text(cubit.on ? "on" : "off",
-                          style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-                        backgroundColor: cubit.mainColor,
-                        onPressed: () {
-                          //cubit.on_off_button();
-                          cubit.on_off_button(context);
-                        },
+                      floatingActionButton: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+
+                              FloatingActionButton(
+                                child: const Icon(Icons.settings),
+                                backgroundColor: mainColor,
+                                onPressed: () {
+                                  if(!animationController.isCompleted){
+                                    animationController.forward();
+                                  }
+                                  else{
+                                    animationController.reverse();
+                                  }
+                                },
+                              ),
+                              const SizedBox(height: 10,),
+                              FloatingActionButton(
+                                child: Text(cubit.on ? AppLocalizations.of(context)!.oN : AppLocalizations.of(context)!.oFF,
+                                  style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                                backgroundColor: mainColor,
+                                onPressed: () {
+                                  //cubit.on_off_button();
+                                  cubit.on_off_button(context);
+                                },
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: animationController.value * 300,),
+                        ],
                       ),
                     ),
                   ),
                 );
               },
             ),
+
           ],
         );
       },

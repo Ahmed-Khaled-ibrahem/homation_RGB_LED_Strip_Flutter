@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../classes/const.dart';
 import 'states.dart';
 import 'package:http/http.dart'as http ;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitial());
@@ -14,20 +14,15 @@ class AppCubit extends Cubit<AppStates> {
 
   bool darkMode = true;
   bool on = true;
-  bool english = true;////
+  bool english = true;
   bool connectionSwitch = true;
   TextEditingController wifiName = TextEditingController();
   TextEditingController wifiPass = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  //Color mainColor = Colors.green;
-  Color mainColor = const Color(0xff13965D);
-  Color backColor = Colors.white;
-  Color blackColor = const Color(0xFF2A2A2A);
-
 
   bool  showPassword = true;
-  String ip = '192.168.1.50';
+  String ip = '192.168.1.40';
   String gateway = '192.168.1.1';
   String subnet = '255.255.255.0';
   bool loading = false;
@@ -44,6 +39,8 @@ class AppCubit extends Cubit<AppStates> {
   Color lightColor = Colors.yellow;
   final dataBase = FirebaseDatabase.instance.ref();
   String language = "en";
+
+  late AnimationController animationController ;
 
   void appStart(){
    // read();
@@ -82,7 +79,7 @@ class AppCubit extends Cubit<AppStates> {
 
       var url = Uri.parse(
           "http://192.168.1.40/conf?ssid="+wifiName.value.text.toString()+"&pass="+passafter);
-      http.read(url).catchError((err) {
+      http.read(url).onError((error, stackTrace) => '').catchError((err) {
         print(err);
         loading = false;
         EasyLoading.dismiss();
@@ -92,23 +89,31 @@ class AppCubit extends Cubit<AppStates> {
         loading =false;
         EasyLoading.dismiss();
 
-        print(value);
-        try{
-          var m = value.split('\n');
-          if(m[0]=="ok"){
-            ip = m[1];
-            save();
-            //setState(() {
-            loading =false;
-            EasyLoading.dismiss();
-            wificontainer = true;
-
-          }
-          else{print('no ip');}
+        print("***********" + value);
+        if(value == 'ok'){
+          save();
+          //setState(() {
+          loading = false;
+          EasyLoading.dismiss();
+          wificontainer = true;
+          emit(Counterplus());
         }
-        catch(e){
-          print('error');
-        }
+        // try{
+        //   var m = value.split('\n');
+        //   if(m[0]=="ok"){
+        //     ip = m[1];
+        //     save();
+        //     //setState(() {
+        //     loading = false;
+        //     EasyLoading.dismiss();
+        //     wificontainer = true;
+        //
+        //   }
+        //   else{print('no ip');}
+        // }
+        // catch(e){
+        //   print('error');
+        // }
 
       });
 
@@ -155,35 +160,37 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   void changeDance(String str) {
-
-    if(str==""){
+   // ["Calm", "Dance", "Fading |", "Fading ||" ,"Random |","Random ||"]
+    if(str=="Calm"){
       changeMode(1);
     }
-    else if(str=="modes here"){
+    else if(str=="Dance"){
       changeMode(2);
     }
-    else if(str==""){
+    else if(str=="Fading |"){
       changeMode(3);
     }
-    else if(str==""){
+    else if(str=="Fading ||"){
       changeMode(4);
     }
-    else if(str==""){
+    else if(str=="Random |"){
       changeMode(5);
     }
-    else if(str==""){
+    else if(str=="Random ||"){
       changeMode(6);
     }
     else{
       changeMode(0);
     }
+    //print(connectionSwitch);
     if(!connectionSwitch) {
+      print('sending mode');
       var url = Uri.parse(
           "http://"+ip+"/data?red="+rgb.red.toString()+"&green="+rgb.green.toString()+"&blue="+rgb.blue.toString()+"&mode="+selectedMode.toString()+"&state=1");
-      http.read(url).timeout(Duration(seconds: 4)).catchError((err) {
+      http.read(url).timeout(Duration(seconds: 4)).onError((error, stackTrace) => '').catchError((err) {
         var url2 = Uri.parse(
             "http://"+"192.168.1.40"+"/data?red="+rgb.red.toString()+"&green="+rgb.green.toString()+"&blue="+rgb.blue.toString()+"&mode="+selectedMode.toString()+"&state=1");
-        http.read(url2).timeout(Duration(seconds: 4)).catchError((err) {});
+        http.read(url2).timeout(Duration(seconds: 4)).onError((error, stackTrace) => '').catchError((err) {});
 
         // on error
       }).then((value) {
@@ -194,8 +201,6 @@ class AppCubit extends Cubit<AppStates> {
       String sendrgb = "R="+rgb.red.toString()+",G="+rgb.green.toString()+",B="+rgb.blue.toString()+",M="+selectedMode.toString()+",S=1,E_M=3";
       dataBase.child('RGB').set(sendrgb);
     }
-
-    //txt280 = str!;
 
     emit(ChangeColor());
   }
@@ -215,16 +220,11 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future read() async {
-
     final prefs = await SharedPreferences.getInstance();
-
     language = prefs.getString('Language')??"en";
     darkMode = prefs.getBool('Theme')!;
     english = prefs.getBool('english')!;
     connectionSwitch = prefs.getBool('Connection')!;
-    //ip = prefs.getString('ip')!;
-    //gateway = prefs.getString('gateway')!;
-    //subnet = prefs.getString('subnet')!;
   }
 
   Future save() async {
@@ -235,15 +235,14 @@ class AppCubit extends Cubit<AppStates> {
     prefs.setBool('Theme', darkMode);
     prefs.setBool('Connection', connectionSwitch);
 
-    //prefs.setString('ip',ip);
-    //prefs.setString('gateway',gateway);
-    //prefs.setString('subnet',subnet);
   }
 
 
   void sendColor(int red,int green, int blue, int mode, int state) async{
+print('send color');
 
-    if(connectionSwitch){
+    if(!connectionSwitch){
+      print('send http');
 
       var url = Uri.parse(
           "http://"+ip+"/data?red="+ red.toString()+
@@ -251,20 +250,22 @@ class AppCubit extends Cubit<AppStates> {
               +"&blue="+blue.toString()+
               "&mode="+mode.toString()+
               "&state="+state.toString());
-      http.read(url).timeout(const Duration(seconds: 4)).catchError((err) {
+
+      http.read(url).timeout(const Duration(seconds: 2)).onError((error, stackTrace) => '').catchError((err) {
         var url2 = Uri.parse(
             "http://"+ip+"/data?red="+ red.toString()+
                 "&green="+green.toString()
                 +"&blue="+blue.toString()+
                 "&mode="+mode.toString()+
                 "&state="+state.toString());
-        http.read(url2).timeout(const Duration(seconds: 4)).catchError((err) {});
+        http.read(url2).timeout(const Duration(seconds: 2)).catchError((err) {});
         // on error
-      }).then((value) {
-        //print(value);
-      });
+      }).onError((error, stackTrace) => 'null').then((value) {
+        print(value);
+      }).onError((error, stackTrace) => null);
     }
     else{
+      print('firebase send');
       String sendrgb = "R="+red.toString()+
           ",G="+green.toString()+
           ",B="+blue.toString()+
@@ -277,12 +278,14 @@ class AppCubit extends Cubit<AppStates> {
 
   void sendESPMode() async{
 
+print('inside esp mode');
     if(!connectionSwitch){
+
       String sendrgb = "R="+rgb.red.toString()+",G="+rgb.green.toString()+",B="+rgb.blue.toString()+",M=0,S=1,E_M=2";
       dataBase.child('RGB').set(sendrgb);
     }
     else{
-
+      print('modesend');
       String sendrgb = "R="+rgb.red.toString()+",G="+rgb.green.toString()+",B="+rgb.blue.toString()+",M=0,S=1,E_M=3";
       dataBase.child('RGB').set(sendrgb);
 
@@ -297,7 +300,6 @@ class AppCubit extends Cubit<AppStates> {
     }
 
   }
-
 
 }
 

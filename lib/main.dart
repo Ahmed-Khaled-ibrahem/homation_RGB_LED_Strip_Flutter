@@ -4,20 +4,13 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'classes/pref_helper.dart';
-import 'classes/restart.dart';
+import 'classes/const.dart';
 import 'cubit/cubit.dart';
-import 'layouts/main_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:homation_led_strip/layouts/drawerPage.dart';
 import 'package:homation_led_strip/cubit/states.dart';
 import 'layouts/scafoldClass.dart';
-import 'package:homation_led_strip/layouts/test.dart';
 
 Future<void> main() async {
-
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Color.fromRGBO(0, 0, 0, 0),
     statusBarIconBrightness: Brightness.light,
@@ -28,7 +21,6 @@ Future<void> main() async {
 
   runApp(const MyApp());
   initloading();
-  //runApp(const newlock());
 }
 
 
@@ -43,12 +35,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
+      lazy: true,
       create: (BuildContext context) => AppCubit()..read(),
-      child:Material(),
+      child: Material(),
     );
   }
 }
-
 
 class Material extends StatelessWidget {
   @override
@@ -59,23 +51,24 @@ class Material extends StatelessWidget {
         AppCubit cubit = AppCubit.get(context);
         return  MaterialApp(
           builder: EasyLoading.init(),
-          //locale:Locale(cubit.language),
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
+
+          locale: [const Locale('en'),const Locale("ar")][cubit.language=='en' ? 0:1],
           supportedLocales: const [Locale('en', ''), Locale('ar', ''),],
           debugShowCheckedModeBanner: false,
           title: "RGB",
           theme: ThemeData(
-            scaffoldBackgroundColor: cubit.darkMode? cubit.blackColor: Colors.white,
+            scaffoldBackgroundColor: cubit.darkMode? blackColor: Colors.white,
                 textTheme: TextTheme(
                   bodyText2: TextStyle(
-                      color: cubit.darkMode?  Colors.white:cubit.blackColor),),),// AppLocalizations.of(context)!.appTitle,
+                      color: cubit.darkMode?  Colors.white:blackColor),),),// AppLocalizations.of(context)!.appTitle,
           //theme: cubit.darkMode ? cubit.darkModeTheme : cubit.lightModeTheme,
-          home:  const MyScafold(),
+          home:   const MyScafold(),
         );
       },
     );
